@@ -1,38 +1,34 @@
 module.exports = function check(str, bracketsConfig) {
-  let otk = ['(', '[', '{'];
-	let znk =[',', "'", " "];
-	let komSkob = {
-	  ['(']:')',
-	  ['[']:']',
-	  ['{']:'}',
-	  ["'"]:"'",
-	}
-	let stek = [];
+ let stek = [];
+	let otk =[];
+	let komb = {  };
+   	for(let it in bracketsConfig){
+     	otk.push(bracketsConfig[it][0]);
+     	komb[bracketsConfig[it][0]]=bracketsConfig[it][1];
+   	}
+
 	for(let i=0; i<str.length; i++){
-		let topE = stek[stek.length-1];
-		if(Number.isInteger(+str[i]) || str[i]=="|"){
-			if(str[i]==topE){
-			  stek.pop();
-			}else{
+		let topE = stek[stek.length-1] || "";
+		if(komb[str[i]]==str[i]){
+			if(stek.length === 0 || topE != str[i]){
 			  stek.push(str[i]);
-			}	  
-		}	  
-		else{
+			}else{
+				stek.pop();
+			}
+		}else{
 			if(otk.includes(str[i])){
-				stek.push(str[i]);
+					  stek.push(str[i]);
 			}else{
 				if(stek.length === 0){
 					return false;
 				}
-				if(znk.includes(str[i])){
-					continue;
-				}
-				if(komSkob[topE] == str[i] ){
-						stek.pop();
+				if(komb[topE] == str[i] ){
+					stek.pop();
 				}
 			}
 		}
-    
+		  
 	}
+
 	return stek.length === 0;
 }
